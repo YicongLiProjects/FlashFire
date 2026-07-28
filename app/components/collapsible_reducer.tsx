@@ -1,17 +1,20 @@
 // Define a job by its title, description and id
-type Job = {
+export type Job = {
     jobTitle: string;
     jobDescription: string;
     id: string;
+    wageOption: string;
     skillSet: string[];
 }
 
-type Action =
+// Types of possible actions that can be performed on a job
+export type Action =
     | {
         type: "added";
         jobTitle: string;
         jobDescription: string;
         id: string;
+        wageOption: string;
         skillSet: string[];
     }
     | {
@@ -32,6 +35,7 @@ export default function collapsibleReducer(jobs: Job[], action: Action): Job[] {
                 jobTitle: action.jobTitle,
                 jobDescription: action.jobDescription,
                 id: action.id,
+                wageOption: action.wageOption,
                 skillSet: action.skillSet
             }];
         }
