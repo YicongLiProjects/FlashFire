@@ -1,3 +1,7 @@
-export default function SalaryResults() {
-    
-}
+const SalaryResults = () => {
+    return (
+        <h1>Under construction!</h1>
+    );
+};
+
+export default SalaryResults;

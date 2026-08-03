@@ -6,6 +6,8 @@ import WageSelection from "./components/wage_unit_selection";
 import CollapsibleContainer from "./components/collapsible_container";
 import collapsibleReducer from "./components/collapsible_reducer";
 import { useState, useReducer } from "react";
+import { useRouter } from 'next/navigation';
+import { useModelContext } from "./context/predictions_context";
 
 export default function Home() {
   const [wageUnit, setWageUnit] = useState("yearly");
@@ -13,7 +15,10 @@ export default function Home() {
   const [jobTitle, setJobTitle] = useState("");
   const [jobList, dispatch] = useReducer(collapsibleReducer, []);
   const [jobAdded, setJobAdded] = useState(false);
+  const router = useRouter();
+  const { setPredictionResult, setLoading } = useModelContext();
 
+  // Adds a job to the job list on the client end
   function handleAddJob() {
     dispatch({
       type: "added",
@@ -27,6 +32,26 @@ export default function Home() {
     setTimeout(() => setJobAdded(false), 2000);
   }
 
+  // Sends the job list to the machine learning model for salary prediction
+  async function submitJobs() {
+    setLoading(true);
+    try {
+      const response = await fetch('https://localhost:3000/predict_salary', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(jobList)
+      });
+      const data = await response.json();
+      setPredictionResult(data);
+      router.push('/salary_results');
+    } finally {
+      // Always set loading false after completing the request
+      setLoading(false);
+    }
+  }
+
   return (
     <main>
       <Navbar/>
@@ -38,7 +63,7 @@ export default function Home() {
           <WageSelection wageOption={wageUnit} changeWageOption={setWageUnit}/>
           <div className="flex flex-row">
             <button className="text-red-600 hover:text-yellow-500 px-15 py-2 border-red-400 border-2 rounded-xl active:bg-gray-300 text-2xl mr-2" onClick={handleAddJob}>Add</button>
-            <button className="hover:text-yellow-500 px-15 py-4 border-red-400 border-2 rounded-xl text-4xl">Submit</button>
+            <button className="hover:text-yellow-500 px-15 py-4 border-red-400 border-2 rounded-xl text-4xl" onClick={submitJobs}>Submit</button>
           </div>
         </div>
         <CollapsibleContainer jobList={jobList} dispatch={dispatch}/>
