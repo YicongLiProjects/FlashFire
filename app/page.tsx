@@ -16,7 +16,7 @@ export default function Home() {
   const [jobList, dispatch] = useReducer(collapsibleReducer, []);
   const [jobAdded, setJobAdded] = useState(false);
   const router = useRouter();
-  const { setPredictionResult, setLoading } = useModelContext();
+  const { setJobList, setPredictionResult } = useModelContext();
 
   // Adds a job to the job list on the client end
   function handleAddJob() {
@@ -34,22 +34,27 @@ export default function Home() {
 
   // Sends the job list to the machine learning model for salary prediction
   async function submitJobs() {
-    setLoading(true);
-    try {
-      const response = await fetch('https://localhost:3000/predict_salary', {
+    // Transform the job list to only include job title and skill set to input to the model
+    const jobs = jobList.map((job) => ({
+      jobTitle: job.jobTitle,
+      skillSet: job.skillSet,
+      wageOption: job.wageOption
+    }));
+    setJobList(jobList);
+      const response = await fetch('http://localhost:8000/predict_salary', {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(jobList)
+        body: JSON.stringify(jobs)
       });
       const data = await response.json();
+      if (!response.ok) {
+        console.log("Error: " + data.error);
+        return;
+      }
       setPredictionResult(data);
       router.push('/salary_results');
-    } finally {
-      // Always set loading false after completing the request
-      setLoading(false);
-    }
   }
 
   return (
