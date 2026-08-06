@@ -41,7 +41,7 @@ export default function Home() {
       wageOption: job.wageOption
     }));
     setJobList(jobList);
-      const response = await fetch('http://localhost:8000/predict_salary', {
+      const response = await fetch('http://flashfire.onrender.com/predict_salary', {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
