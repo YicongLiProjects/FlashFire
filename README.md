@@ -1,36 +1,19 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FlashFire, a job salary prediction tool for data science roles
 
-## Getting Started
+# How to access the website
+Live link: https://flashfire.onrender.com/
 
-First, run the development server:
+## Frontend
+FlashFire is built on a React and Next.js front end ensuring the cleanliness and reusability of code as well as allowing for easy state
+management of components. TypeScript ensures any compile-time type error is caught, and Tailwind CSS is chosen to simplify the total size
+of the full stack web application by allowing class names to be used for styling rather than full CSS files. 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Backend
+The backend is made of two parts:
+* API layer
+  The API layer connecting the frontend and backend is created using FastAPI, a lightweight backend framework. It was chosen over Django
+  as this app only needed a way to bridge Next.js to the ML model without complicated setups, and it did not have a database nor cloud requiring
+  Django's out of the box features.
+* Machine learning model
+  The machine learning model that predicts salaries based on inputs is trained using a Kaggle dataset called **Data Science Job & Salary Prediction (Glassdoor)**. Here is the link for downloading it: https://www.kaggle.com/code/fahadrehman07/data-science-job-salary-prediction-glassdoor/notebook.
+  We used a two-output linear regression model to output the salary as a range. Because of its small size (741 data points after processing and filtering out unknowns), there may be great variances in the prediction of salaries. 
